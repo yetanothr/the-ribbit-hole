@@ -1,0 +1,10 @@
+@keyframes space_float {
+    0%{
+        /*top:-2%;*/
+        transform: translateY(-20%) rotate(10deg);
+    }
+    100%{
+        /*top:-2%;*/
+        transform: translateY(20%) rotate(10deg);
+    }
+}
