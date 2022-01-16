@@ -1,0 +1,7 @@
+.sky_background{
+    z-index: 2;
+}
+
+.sky_foreground{
+    z-index: 4;
+}
