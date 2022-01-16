@@ -1,7 +1,11 @@
 .sky_background{
-    z-index: 2;
+    z-index: -2;
 }
 
 .sky_foreground{
     z-index: 4;
+}
+
+.text{
+    color: white;
 }

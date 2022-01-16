@@ -6,6 +6,13 @@
     margin: 0;
 }
 
+canvas { /*blurry canves fix*/
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
 h1{
     font-family: 'MedievalSharp', cursive;
     font-size: 10vh;
@@ -15,7 +22,6 @@ h1{
     display:flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
     flex-direction: column;
 }
 
@@ -36,12 +42,5 @@ h1{
 }
 
 .floats{
-    /*position: relative;
-    animation-name:space_float;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    transition-timing-function: linear;
-    transform: rotate(10deg);*/
-
     animation:space_float 2s alternate ease-in-out infinite;
 }
