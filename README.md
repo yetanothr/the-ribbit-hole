@@ -10,7 +10,7 @@ It's a way for me to practice programming, learn new things, it's a creative out
 Main purpose of this section is to present the source material I took inspiration from and credit the authors of art used.
 It may also present some thougts I have on certain sections of the project.
 
-# The night sky background
+### The night sky background
 
 I've dreamt of creating such effect in JS for a bit now. It's not perfect, in fact it's quite rudimentary.
 I plan on improving the way the stars look, are spread out and on offsetting their blinking.
