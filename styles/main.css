@@ -6,27 +6,41 @@
     margin: 0;
 }
 
+canvas { /*blurry canves fix*/
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
 h1{
     font-family: 'MedievalSharp', cursive;
-    font-size: 10vh;
+    font-size: 8vh;
 }
 
 .center_content{
     display:flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.span_whole_vp{
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
+    top:0;
+    left:0;
+}
+
+.span_whole{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    left:0;
 }
 
 .floats{
-    /*position: relative;
-    animation-name:space_float;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    transition-timing-function: linear;
-    transform: rotate(10deg);*/
-
     animation:space_float 2s alternate ease-in-out infinite;
 }
