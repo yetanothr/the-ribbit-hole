@@ -9,7 +9,7 @@ let sky_h = sky_canv.height;
 let sky_w = sky_canv.width;
 
 let stars = [];
-let dec = false;
+
 
 for(let i = 0; i < star_density; i++){
     stars.push(new particle(Math.floor(sky_w * Math.random()),Math.floor(sky_h * Math.random())));
@@ -20,7 +20,26 @@ requestAnimationFrame(drawSkyFrame)
 function particle(posX,posY){
     this.x = posX;
     this.y = posY;
-    this.col = 0;
+    this.maxCol = Math.floor((Math.random() * 105) + 150);
+    this.currCol = 0;
+    this.dec = false;
+
+    this.frame = function(){
+
+        if(!this.dec){
+            this.currCol++;
+            if(this.currCol == this.maxCol)
+            this.dec = true;
+        }
+        else{
+            this.currCol--;
+            if(this.currCol == 0)
+            this.dec = false;
+        }
+
+
+    };
+
 }
 function drawSkyFrame(){
 
@@ -29,18 +48,9 @@ function drawSkyFrame(){
     
     for(let i = 0; i < star_density; i++){
 
-        if(!dec){
-            stars[i].col++;
-            if(stars[i].col == 255)
-            dec = true;
-        }
-        else{
-            stars[i].col--;
-            if(stars[i].col == 0)
-            dec = false;
-        }
+        stars[i].frame();
         
-        sky_ctx.fillStyle=`rgb(${stars[i].col}, ${stars[i].col}, ${stars[i].col})`;
+        sky_ctx.fillStyle=`rgb(${stars[i].currCol}, ${stars[i].currCol}, ${stars[i].currCol})`;
         sky_ctx.fillRect(stars[i].x,stars[i].y,1,1);
     }
 
