@@ -6,7 +6,7 @@
     margin: 0;
 }
 
-canvas { /*blurry canves fix*/
+canvas { /*blurry canvas fix*/
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;
