@@ -8,7 +8,7 @@ let lines_ctx = canv.getContext("2d");
 let lines_h = canv.height;
 let lines_w = canv.width;
 
-const line_amnt = 10; //amount of horizontal lines
+const line_amnt = 8; //amount of horizontal lines
 const line_thck = 5; //line thickness
 
 const mouse_effect_radius = 70; //'radius' in which the mosue will affect the lines(and in which parts of canvas will be drawn)
@@ -34,15 +34,14 @@ canv.addEventListener("mousemove",(e) => {
 
 //preparing background gradient
 
-let bg_gradient = lines_ctx.createLinearGradient(0,lines_h,lines_w,0);
+const bg_gradient = lines_ctx.createLinearGradient(0,lines_h,lines_w,0);
 bg_gradient.addColorStop(0,"#ff00c8");
 bg_gradient.addColorStop(1, "#ffee03");
-
-drawInitialLines();
 
 //starting the animation
 requestAnimationFrame(drawLinesFrame);
 
+/* An init function needed with the old way of resetting background
 function drawInitialLines(){
 
     //draw background gradient
@@ -55,12 +54,7 @@ function drawInitialLines(){
     //Horizontal lines
     for(let i = 0; i < line_amnt; i++){
     for(let j = 0; j <= lines_w; j++){
-        /*if(Math.abs(j - cursor.x) < 50 && Math.abs((i * line_spacing) - cursor.y) < 50){
-            lines_ctx.fillRect(j,(i * line_spacing) + 1.0/(Math.abs(j - cursor.x) / 10.0),1,line_thck);
-        }
-        else{*/
         lines_ctx.fillRect(j,i * line_spacing,1,line_thck);
-        //}
     }
 
     //Vertical lines
@@ -70,7 +64,7 @@ function drawInitialLines(){
         }
     }
 }
-}
+}*/
 
 function drawLinesFrame(){
 
@@ -108,7 +102,7 @@ function drawLinesFrame(){
 
     lines_ctx.fillStyle = "#002696"; //setting line color
 
-    for(let i = 0; i < line_amnt; i++){ //redrawing straught vertical lines
+    for(let i = 0; i < line_amnt; i++){ //redrawing straight vertical lines
         lines_ctx.fillRect(0, i * line_spacing,lines_w,line_thck);
     }
 
@@ -117,7 +111,7 @@ function drawLinesFrame(){
     }
 
     //bending the lines
-    //-(p_axis_dist^2)/(s_axis_dist / 2) + (mouse_effect_radius / 2)
+    //-(p_axis_dist^2)/(s_axis_dist / 2) + (s_axis_dist * 0.6)
 
     //clearing the area for bent lines
     lines_ctx.fillStyle = bg_gradient;
@@ -126,13 +120,41 @@ function drawLinesFrame(){
     lines_ctx.fillStyle = "#002696";
 
     //bent horizontal lines
+    //working version
+    /*for(let i = 0; i < line_amnt; i++){
+        if((i * line_spacing) >= (cursor.y - mouse_effect_radius) - line_thck && (i * line_spacing) <= (cursor.y + mouse_effect_radius) + line_thck){
+            for(let j = cursor.x - mouse_effect_radius; j <= cursor.x + mouse_effect_radius; j++){
+                let y_pos = (i * line_spacing);
+                let p_axis_dist = Math.abs(j - cursor.x);
+                let s_axis_dist = Math.abs(cursor.y - (i * line_spacing));
+                lines_ctx.fillRect(j,(i * line_spacing) + (y_pos - cursor.y>0?-((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.4)):((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.4))) ,1,line_thck);
+            }
+        }
+    }*/
+    //experimental version
     for(let i = 0; i < line_amnt; i++){
         if((i * line_spacing) >= (cursor.y - mouse_effect_radius) - line_thck && (i * line_spacing) <= (cursor.y + mouse_effect_radius) + line_thck){
             for(let j = cursor.x - mouse_effect_radius; j <= cursor.x + mouse_effect_radius; j++){
                 let y_pos = (i * line_spacing);
                 let p_axis_dist = Math.abs(j - cursor.x);
                 let s_axis_dist = Math.abs(cursor.y - (i * line_spacing));
-                lines_ctx.fillRect(j,(i * line_spacing) + (y_pos - cursor.y>0?-((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6)):((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6))) ,1,line_thck);
+                if(y_pos - cursor.y > 0){ //line is under the mouse pointer
+                    let final_p_axis_coord = -((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.4));
+                    if(final_p_axis_coord + y_pos >= y_pos){
+                        lines_ctx.fillRect(j,y_pos, 1 ,line_thck);
+                    }else{
+                        lines_ctx.fillRect(j, y_pos + final_p_axis_coord, 1, line_thck);
+                    }
+                }
+                else{   //line is above the mouse pointer
+                    let final_p_axis_coord =  ((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.4));
+                    if(final_p_axis_coord + y_pos < y_pos){
+                        lines_ctx.fillRect(j,y_pos, 1 ,line_thck);
+                    }
+                    else{
+                        lines_ctx.fillRect(j, y_pos + final_p_axis_coord, 1, line_thck); 
+                    }
+                }
             }
         }
     }
@@ -144,7 +166,24 @@ function drawLinesFrame(){
             let x_pos = (i * line_spacing);
             let p_axis_dist = Math.abs(j - cursor.y);
             let s_axis_dist = Math.abs(cursor.x - (i * line_spacing));
-            lines_ctx.fillRect(i * line_spacing + (x_pos - cursor.x>0?-((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6)):((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6))),j,line_thck,1);
+            if(x_pos - cursor.x > 0){//pointer before the line
+                let final_p_axis_coord = -((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.4));
+                if(x_pos + final_p_axis_coord > x_pos){
+                    lines_ctx.fillRect(x_pos,j,line_thck,1);
+                }
+                else{
+                    lines_ctx.fillRect(x_pos + final_p_axis_coord,j,line_thck,1);
+                }
+            }
+            else{ //pointer after the line
+                let final_p_axis_coord = ((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.4));
+                if(x_pos + final_p_axis_coord < x_pos){
+                    lines_ctx.fillRect(x_pos,j,line_thck,1);
+                }
+                else{
+                    lines_ctx.fillRect(x_pos + final_p_axis_coord,j,line_thck,1);
+                }
+            }
         }
     }
     }
