@@ -73,6 +73,8 @@ function drawInitialLines(){
 }
 
 function drawLinesFrame(){
+
+    /* old way of resetting background
     //clearing previous draw area(resetting to straight lines)
     lines_ctx.fillStyle = bg_gradient;
     lines_ctx.fillRect(cursor.prevX - mouse_effect_radius,cursor.prevY - mouse_effect_radius,2 * mouse_effect_radius,2 * mouse_effect_radius);
@@ -97,9 +99,27 @@ function drawLinesFrame(){
     }
     }
 
+    */
+
+    //resetting the background
+
+    lines_ctx.fillStyle = bg_gradient;
+    lines_ctx.fillRect(0,0, lines_w,lines_h); //drawing background gradient
+
+    lines_ctx.fillStyle = "#002696"; //setting line color
+
+    for(let i = 0; i < line_amnt; i++){ //redrawing straught vertical lines
+        lines_ctx.fillRect(0, i * line_spacing,lines_w,line_thck);
+    }
+
+    for(let i = 0; i < vert_amnt; i++){
+        lines_ctx.fillRect(i * line_spacing, 0, line_thck, lines_h);
+    }
+
     //bending the lines
-    //−(𝑥^2/50+𝑥/50−10)
-    //-(Math.pow(dist, 2)/50 + dist/50-10)
+    //-(p_axis_dist^2)/(s_axis_dist / 2) + (mouse_effect_radius / 2)
+
+    //clearing the area for bent lines
     lines_ctx.fillStyle = bg_gradient;
     lines_ctx.fillRect(cursor.x - mouse_effect_radius,cursor.y - mouse_effect_radius,2 * mouse_effect_radius,2 * mouse_effect_radius);
 
@@ -110,8 +130,9 @@ function drawLinesFrame(){
         if((i * line_spacing) >= (cursor.y - mouse_effect_radius) - line_thck && (i * line_spacing) <= (cursor.y + mouse_effect_radius) + line_thck){
             for(let j = cursor.x - mouse_effect_radius; j <= cursor.x + mouse_effect_radius; j++){
                 let y_pos = (i * line_spacing);
-                let dist = Math.abs(j - cursor.x);
-                lines_ctx.fillRect(j,(i * line_spacing) + (y_pos - cursor.y>0?-(-(Math.pow(dist, 2)/200 + dist/200-25)):(-(Math.pow(dist, 2)/200 + dist/200-25))) ,1,line_thck);
+                let p_axis_dist = Math.abs(j - cursor.x);
+                let s_axis_dist = Math.abs(cursor.y - (i * line_spacing));
+                lines_ctx.fillRect(j,(i * line_spacing) + (y_pos - cursor.y>0?-((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6)):((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6))) ,1,line_thck);
             }
         }
     }
@@ -121,8 +142,9 @@ function drawLinesFrame(){
         if((i * line_spacing) >= (cursor.prevX - mouse_effect_radius) - line_thck && (i * line_spacing) <= (cursor.prevX + mouse_effect_radius) + line_thck){
         for(let j = (cursor.prevY - mouse_effect_radius) - line_thck; j <= (cursor.prevY + mouse_effect_radius) + line_thck; j++){
             let x_pos = (i * line_spacing);
-            let dist = Math.abs(j - cursor.y);
-            lines_ctx.fillRect(i * line_spacing + (x_pos - cursor.x>0?-(-(Math.pow(dist, 2)/200 + dist/200-25)):(-(Math.pow(dist, 2)/200 + dist/200-25))),j,line_thck,1);
+            let p_axis_dist = Math.abs(j - cursor.y);
+            let s_axis_dist = Math.abs(cursor.x - (i * line_spacing));
+            lines_ctx.fillRect(i * line_spacing + (x_pos - cursor.x>0?-((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6)):((-Math.pow(p_axis_dist,2))/(s_axis_dist * 2) + (s_axis_dist * 0.6))),j,line_thck,1);
         }
     }
     }
