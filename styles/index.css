@@ -1,0 +1,17 @@
+.button_sky{
+    border: 1px solid white;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 30%;
+    padding:1%;
+    display: inline;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 200%;
+    text-decoration:none;
+    transition: 0.3s;
+    margin:10px;
+}
+
+.button_sky:hover{
+    box-shadow: white 2px 2px, white -2px -2px;
+    transition: 0.3s;
+}
